@@ -99,6 +99,9 @@ jobs:
           command: |
             cd backend
             npm install
+            npm install --save-dev webpack@5.72.0
+            npm update path-parse --depth 3
+            npm update kind-of --depth 14
             npm audit fix --force
             npm audit --audit-level=critical
       - save_cache:
