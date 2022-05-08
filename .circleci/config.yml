@@ -168,7 +168,7 @@ jobs:
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text)
-            curl https://kvdb.io/294osPd86YnetHcf6CdoGA/BACKEND_IP -d '$BACKEND_IP'
+            curl https://kvdb.io/294osPd86YnetHcf6CdoGA/BACKEND_IP -d "$BACKEND_IP"
       - run:
           name: Deploy front-end infrastructure
           command: |
@@ -204,8 +204,14 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            # Install ansible
             apk add --update ansible
             ansible --version
+            # Install awscli
+            sudo apt-get update && sudo apt-get install -yy less
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
       - run:
           name: Configure server
           command: |
