@@ -253,10 +253,11 @@ jobs:
             then
               echo "DB migration was successful, will update results..."
               curl --insecure "https://kvdb.io/294osPd86YnetHcf6CdoGA/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d "success"
+              curl --insecure -F "migrations_dump=@/home/circleci/project/backend/migrations_dump.txt" "https://kvdb.io/294osPd86YnetHcf6CdoGA/migrations_dump_success"
             else
               echo "DB migration failed, please verify setup!"
               curl --insecure "https://kvdb.io/294osPd86YnetHcf6CdoGA/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d "failure"
-              curl --insecure -F "migrations_dump=@/home/circleci/project/backend/migrations_dump.txt" "https://kvdb.io/294osPd86YnetHcf6CdoGA/migrations_dump"
+              curl --insecure -F "migrations_dump=@/home/circleci/project/backend/migrations_dump.txt" "https://kvdb.io/294osPd86YnetHcf6CdoGA/migrations_dump_failure"
             fi
       - destroy-environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
