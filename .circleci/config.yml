@@ -9,11 +9,16 @@ commands:
         type: string
     steps:
       - run:
-          name: Destroy environments
+          name: Destroy udapeople backend cfn stack
           when: on_fail
           command: |
             aws cloudformation delete-stack \
               --stack-name "udapeople-backend-<< parameters.id >>"
+      - run:
+          name: Destroy udapeople frontend cfn stack and S3 bucket
+          when: on_fail
+          command: |
+            aws s3 rm s3://udapeople-<< parameters.id >> --recursive
             aws cloudformation delete-stack \
               --stack-name "udapeople-frontend-<< parameters.id >>"
 
@@ -251,6 +256,7 @@ jobs:
             else
               echo "DB migration failed, please verify setup!"
               curl --insecure "https://kvdb.io/294osPd86YnetHcf6CdoGA/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d "failure"
+              curl --insecure -F "migrations_dump=@/home/circleci/project/backend/migrations_dump.txt" "https://kvdb.io/294osPd86YnetHcf6CdoGA/migrations_dump"
             fi
       - destroy-environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
