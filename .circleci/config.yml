@@ -210,8 +210,8 @@ jobs:
           name: Install dependencies
           command: |
             # Install ansible
-            sudo apt update
-            sudo apt install ansible
+            sudo apt-get update
+            sudo apt-get install ansible
             ansible --version
             # Install awscli
             sudo apt-get update && sudo apt-get install -y less
@@ -317,8 +317,8 @@ jobs:
           name: Install dependencies
           command: |
             # Install ansible
-            sudo apt update
-            sudo apt install ansible
+            sudo apt-get update
+            sudo apt-get install ansible curl rsync openssh nodejs npm
             ansible --version
             # Install awscli
             sudo apt-get update && sudo apt-get install -y less
