@@ -213,20 +213,16 @@ jobs:
           at: .
       - run:
           name: Install dependencies
+          working_directory: ./.circleci/ansible
           command: |
-            # Install ansible
-            sudo apt-get update
-            sudo apt-get install ansible
+            apk add --update ansible
             ansible --version
-            # Install awscli
-            sudo apt-get update && sudo apt-get install -y less
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
       - run:
           name: Configure server
+          working_directory: ./.circleci/ansible
           command: |
-            cd .circleci/ansible
+            pwd &&
+            ls -la
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
