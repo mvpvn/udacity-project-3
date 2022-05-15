@@ -13,7 +13,7 @@
     - ansible_stdout_callback: yaml
 
   environment:
-    - ENVIRONMENT: production
+    # - ENVIRONMENT: production
     - TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION')}}"  
     - TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
     - TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST')}}"
@@ -25,5 +25,4 @@
     - TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
     
   roles:
-    - configure-server
     - deploy
