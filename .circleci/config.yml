@@ -331,6 +331,7 @@ jobs:
           command: |
             pwd &&
             ls -la
+            cd backend
             npm i
             npm run build
             cat inventory.txt
