@@ -16,9 +16,9 @@
   - name: "stop anything that might already be running"
     become: yes
     command: pm2 stop default
-    ignore_errors: true
     args:
       chdir: /home/ubuntu/uda_app/dist
+    ignore_errors: true
 
   - name: "start server"
     become: yes
