@@ -1,7 +1,4 @@
 ---
-  - name: "show current user"
-    shell: whoiam
-
   - name: "copy backend binaries"
     become: yes
     synchronize:
