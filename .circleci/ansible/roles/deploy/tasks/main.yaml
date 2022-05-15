@@ -13,13 +13,15 @@
       dest: /home/ubuntu/uda_app
       recursive: true
 
-  - name: "delete anything that might already be running"
-    become: true
-    command: pm2 delete all
+  - name: "stop anything that might already be running"
+    become: yes
+    command: pm2 stop default
     ignore_errors: true
+    args:
+      chdir: /home/ubuntu/uda_app/dist
 
   - name: "start server"
-    become: true
+    become: yes
     command: pm2 start -f ./main.js
     args:
       chdir: /home/ubuntu/uda_app/dist
