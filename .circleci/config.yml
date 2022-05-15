@@ -217,6 +217,8 @@ jobs:
           command: |
             apk add --update ansible
             ansible --version
+            pip install awscli
+            aws --version
       - run:
           name: Configure server
           working_directory: ./.circleci/ansible
