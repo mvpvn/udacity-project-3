@@ -327,11 +327,13 @@ jobs:
             aws --version
       - run:
           name: Deploy backend
-          working_directory: ./.circleci/ansible
           command: |
+            cd backend
             pwd &&
             ls -la
-            cd backend
+            cd .circleci/ansible
+            pwd &&
+            ls -la
             npm i
             npm run build
             cat inventory.txt
