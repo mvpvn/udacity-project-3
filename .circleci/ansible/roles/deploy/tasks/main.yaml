@@ -1,9 +1,7 @@
 ---
-  - name: "show remote environment"
-    shell: env
-
   - name: "copy backend binaries"
     become: yes
+    become_user: root
     synchronize:
       src: ../../backend/dist
       dest: /home/ubuntu/uda_app
@@ -11,6 +9,7 @@
 
   - name: "copy node_modules"
     become: yes
+    become_user: root
     synchronize:
       src: ../../backend/node_modules
       dest: /home/ubuntu/uda_app
@@ -18,11 +17,13 @@
 
   - name: "stop anything that might already be running"
     become: yes
+    become_user: root
     command: pm2 delete all
     ignore_errors: true
 
   - name: "start server"
     become: yes
+    become_user: root
     command: pm2 start -f ./main.js
     args:
       chdir: /home/ubuntu/uda_app/dist
