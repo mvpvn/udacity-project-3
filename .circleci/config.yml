@@ -314,9 +314,8 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible
-            apk add --update npm
-            apk add --update tar
+            apk add --update ansible npm tar
+            pip install awscli
       - run:
           name: Back-end zip
           command: |
@@ -324,7 +323,6 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            cat inventory.txt
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml -vvv
       - destroy-environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
