@@ -135,18 +135,14 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: .
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Back-end scan
           command: |
             cd backend
-            npm install
-            npm install --save-dev webpack@5.72.0
-            npm update path-parse --depth 3
-            npm update kind-of --depth 14
-            npm audit fix --force
-            npm audit --audit-level=critical
+            npm i
+            npm audit fix --audit-level=critical --force
 
   deploy-infrastructure:
     docker:
