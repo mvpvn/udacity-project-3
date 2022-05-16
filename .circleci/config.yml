@@ -32,9 +32,9 @@ commands:
           command: |
             aws s3 rm s3://udapeople-<< parameters.id >> --recursive
             aws cloudformation delete-stack \
-              --stack-name "udapeople-frontend-<< parameters.id >>"
-            aws cloudformation delete-stack \
               --stack-name "udapeople-backend-<< parameters.id >>"
+            aws cloudformation delete-stack \
+              --stack-name "udapeople-frontend-<< parameters.id >>"
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow.
@@ -43,22 +43,6 @@ commands:
         description: Unique identifier.
         type: string
     steps:
-      - run:
-          name: Install CURL if not Exist
-          when: on_fail
-          command: |
-            if ! [ -x "$(command -v curl)" ]
-            then
-              #if no npm, then python env
-              if ! [ -x "$(command -v npm)" ]
-              then 
-                apk add --update ansible
-              else
-                sudo apt install curl
-              fi
-            else
-              echo "CURL already installed"
-            fi
       - run:
           name: Revert migrations
           when: on_fail
@@ -303,7 +287,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible npm tar
+            apk add --update ansible curl rsync openssh nodejs npm
             pip install awscli
       - run:
           name: Back-end zip
