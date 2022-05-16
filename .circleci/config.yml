@@ -35,7 +35,7 @@ commands:
           command: |
             SUCCESS=$(curl --insecure https://kvdb.io/294osPd86YnetHcf6CdoGA/migration_<< parameters.id >>)
             echo SUCCESS
-            if [[ "$SUCCESS" == "success" ]]; 
+            if [[ "$SUCCESS" == "failure" ]]; 
             then
               cd ~/project/backend
               npm install
