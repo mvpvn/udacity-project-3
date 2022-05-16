@@ -69,18 +69,17 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - attach_workspace:
-          at: .
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Back-end build
-          working_directory: ./backend
           command: |
-            npm install
+            cd backend
+            npm i
             npm run build
-      - persist_to_workspace:
-          root: .
-          paths:
-            - backend/dist
+      - save_cache:
+          paths: [backend/node_modules]
+          key: backend-build
 
   test-frontend:
     docker:
@@ -309,21 +308,24 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["59:44:0b:7b:14:14:91:bd:1b:86:47:43:cb:48:83:8f"]
       - attach_workspace:
-          at: .
+          at: ~/
+      - restore_cache:
+          keys: [backend-build]
       - run:
           name: Install dependencies
-          working_directory: ./.circleci/ansible
           command: |
-            apk add --update ansible curl rsync openssh nodejs npm
-            ansible --version
-            pip install awscli
-            aws --version
+            apk add --update ansible
+            apk add --update npm
+            apk add --update tar
+      - run:
+          name: Back-end zip
+          command: |
+            tar -C backend -czvf artifact.tar.gz .  
       - run:
           name: Deploy backend
-          working_directory: ./.circleci/ansible
           command: |
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml -vv
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml -vvv
       - destroy-environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
@@ -346,6 +348,7 @@ jobs:
             export BACKEND_IP=$(curl --insecure https://kvdb.io/294osPd86YnetHcf6CdoGA/BACKEND_IP)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
+            sleep 30
             if curl "${API_URL}/api/status" | grep "ok"
             then
                 return 0

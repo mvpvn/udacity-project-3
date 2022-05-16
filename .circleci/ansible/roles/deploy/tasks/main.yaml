@@ -1,48 +1,37 @@
 ---
-  - name: "copy backend binaries"
-    become: yes
-    synchronize:
-      src: ../../backend/dist
-      dest: /home/ubuntu/uda_app
-      recursive: true
+  - name: "install dependencies."
+    become: true
+    apt:
+      name: ["nodejs", "npm"]
+      state: latest
+      update_cache: yes
 
-  - name: "stop anything that might already be running"
-    become: yes
-    command: pm2 stop default
-    ignore_errors: true
+  - name: "install pm2"
+    become: true
+    npm:
+      name: pm2
+      global: yes
+      production: yes
+      state: present
+  
+  - name: Copy backend dist files web server
+    copy:
+      src: /root/project/artifact.tar.gz
+      dest: /home/ubuntu/artifact.tar.gz
 
-  - name: "start server"
-    become: yes
-    command: pm2 start npm -- start
-    args:
-      chdir: /home/ubuntu/uda_app/dist
-    environment:
-     ENVIRONMENT: production
-     TYPEORM_CONNECTION: "{{ lookup('env', 'TYPEORM_CONNECTION') }}"
-     TYPEORM_MIGRATIONS_DIR: "{{ lookup('env', 'TYPEORM_MIGRATIONS_DIR')}}"
-     TYPEORM_MIGRATIONS: "{{ lookup('env', 'TYPEORM_MIGRATIONS')}}"
-     TYPEORM_ENTITIES: "{{ lookup('env', 'TYPEORM_ENTITIES')}}"
-     TYPEORM_HOST: "{{ lookup('env', 'TYPEORM_HOST') }}"
-     TYPEORM_PORT: "{{ lookup('env', 'TYPEORM_PORT') }}"
-     TYPEORM_USERNAME: "{{ lookup('env', 'TYPEORM_USERNAME') }}"
-     TYPEORM_PASSWORD: "{{ lookup('env', 'TYPEORM_PASSWORD') }}"
-     TYPEORM_DATABASE: "{{ lookup('env', 'TYPEORM_DATABASE') }}"
-
-  - name: "show all apps logs"
-    become: yes
-    command: pm2 logs
-    args:
-      chdir: /home/ubuntu/uda_app/dist
-
-  - name: "show logs api"
-    become: yes
-    command: pm2 logs api
-    args:
-      chdir: /home/ubuntu/uda_app/dist
-
-  - name: "show new logs in json"
-    become: yes
-    command: pm2 logs --json
-    args:
-      chdir: /home/ubuntu/uda_app/dist
-
+  - name: Uncompress Backend
+    shell: |
+      cd /home/ubuntu
+      tar xvzf artifact.tar.gz -C .
+      ls -la
+      
+  - name: Build
+    become: true
+    shell: |
+      cd /home/ubuntu
+      npm install
+      npm run build
+  - name: Start PM2
+    shell: |
+      cd /home/ubuntu
+      pm2 start npm --name backend -- start
