@@ -69,17 +69,14 @@ jobs:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [backend-build]
+      - attach_workspace:
+          at: .
       - run:
           name: Back-end build
+          working_directory: ./backend
           command: |
-            cd backend
             npm install
             npm run build
-      - save_cache:
-          paths: [backend/node_modules]
-          key: backend-build
       - persist_to_workspace:
           root: .
           paths:
@@ -327,18 +324,10 @@ jobs:
             aws --version
       - run:
           name: Deploy backend
+          working_directory: ./.circleci/ansible
           command: |
-            cd backend
-            pwd &&
-            ls -la
-            npm i
-            npm run build
-            cd ..
-            cd .circleci/ansible
-            pwd &&
-            ls -la
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            ansible-playbook -i inventory.txt deploy-backend.yml -vv
       - destroy-environment:
           id: ${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations:
