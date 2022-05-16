@@ -31,7 +31,6 @@ commands:
           when: on_fail
           command: |
             aws s3 rm s3://udapeople-<< parameters.id >> --recursive
-            aws s3 rb s3://udapeople-<< parameters.id >> --force
             aws cloudformation delete-stack \
               --stack-name "udapeople-frontend-<< parameters.id >>"
             aws cloudformation delete-stack \
@@ -44,6 +43,22 @@ commands:
         description: Unique identifier.
         type: string
     steps:
+      - run:
+          name: Install CURL if not Exist
+          when: on_fail
+          command: |
+            if ! [ -x "$(command -v curl)" ]
+            then
+              #if no npm, then python env
+              if ! [ -x "$(command -v npm)" ]
+              then 
+                apk add --update ansible
+              else
+                sudo apt install curl
+              fi
+            else
+              echo "CURL already installed"
+            fi
       - run:
           name: Revert migrations
           when: on_fail
@@ -360,13 +375,22 @@ workflows:
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend, configure-infrastructure]
+          requires: [configure-infrastructure]
           filters:
             branches:
               only: [master]
       - deploy-frontend:
           requires: [run-migrations]
+          filters:
+            branches:
+              only: [master]
       - deploy-backend:
           requires: [run-migrations]
+          filters:
+            branches:
+              only: [master]
       - smoke-test:
           requires: [deploy-backend, deploy-frontend]
+          filters:
+            branches:
+              only: [master]
