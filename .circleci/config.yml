@@ -35,7 +35,7 @@ commands:
           command: |
             SUCCESS=$(curl --insecure https://kvdb.io/294osPd86YnetHcf6CdoGA/migration_<< parameters.id >>)
             echo SUCCESS
-            if [[ "$SUCCESS" == "failure" ]]; 
+            if [[ "$SUCCESS" == "success" ]]; 
             then
               cd ~/project/backend
               npm install
@@ -255,10 +255,6 @@ jobs:
               echo "DB migration was successful, will update results..."
               curl --insecure "https://kvdb.io/294osPd86YnetHcf6CdoGA/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d "success"
               curl --insecure -F "migrations_dump=@/home/circleci/project/backend/migrations_dump.txt" "https://kvdb.io/294osPd86YnetHcf6CdoGA/migrations_dump_success"
-            else
-              echo "DB migration failed, please verify setup! Probably the database already exists. Verify setup!"
-              curl --insecure "https://kvdb.io/294osPd86YnetHcf6CdoGA/migration_${CIRCLE_WORKFLOW_ID:0:7}" -d "failure"
-              curl --insecure -F "migrations_dump=@/home/circleci/project/backend/migrations_dump.txt" "https://kvdb.io/294osPd86YnetHcf6CdoGA/migrations_dump_failure"
             fi
             echo "WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment:

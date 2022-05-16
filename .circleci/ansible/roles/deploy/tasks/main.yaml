@@ -8,12 +8,12 @@
 
   - name: "stop anything that might already be running"
     become: yes
-    command: pm2 delete all
+    command: pm2 stop default
     ignore_errors: true
 
   - name: "start server"
     become: yes
-    command: pm2 start -f ./main.js
+    command: pm2 start npm -- start
     args:
       chdir: /home/ubuntu/uda_app/dist
     environment:
