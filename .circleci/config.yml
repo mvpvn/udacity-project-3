@@ -48,10 +48,10 @@ commands:
           when: on_fail
           command: |
             SUCCESS=$(curl --insecure https://kvdb.io/294osPd86YnetHcf6CdoGA/migration_<< parameters.id >>)
-            echo SUCCESS
-            if [[ "$SUCCESS" == "1" ]]; 
+            echo "$SUCCESS"
+            if(( $SUCCESS==1 )); 
             then
-              cd ~/project/backend
+              cd backend
               npm install
               npm run migrations:revert
             fi
@@ -182,7 +182,7 @@ jobs:
           command: |
             aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --filters "Name=tag:project,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
@@ -287,8 +287,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apk add --update ansible curl rsync openssh nodejs npm
-            pip install awscli
+            apk add --update ansible
+            apk add --update npm
+            apk add --update tar
       - run:
           name: Back-end zip
           command: |
