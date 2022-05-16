@@ -31,12 +31,18 @@
   - name: "show all apps logs"
     become: yes
     command: pm2 logs
+    args:
+      chdir: /home/ubuntu/uda_app/dist
 
   - name: "show logs api"
     become: yes
     command: pm2 logs api
+    args:
+      chdir: /home/ubuntu/uda_app/dist
 
   - name: "show new logs in json"
     become: yes
     command: pm2 logs --json
+    args:
+      chdir: /home/ubuntu/uda_app/dist
 
