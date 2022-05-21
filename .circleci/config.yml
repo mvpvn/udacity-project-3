@@ -42,11 +42,6 @@ commands:
         type: string
     steps:
       - run:
-          name: Install dependencies
-          when: on_fail
-          command: |
-            pip install npm
-      - run:
           name: Revert migrations
           when: on_fail
           command: |
@@ -343,6 +338,7 @@ jobs:
           name: Install dependencies
           command: |
             yum install -y tar gzip
+            yum install -y nodejs
       - run:
           name: Update cloudfront distribution
           command: |
