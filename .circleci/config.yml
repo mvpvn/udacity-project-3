@@ -353,7 +353,7 @@ jobs:
             cat oldWorkflowId.txt
             aws cloudformation update-stack \
             --use-previous-template \
-            --stack-name InitialStack-638226446375 \
+            --stack-name InitialStack \
             --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7}
       - persist_to_workspace:
           root: ~/
