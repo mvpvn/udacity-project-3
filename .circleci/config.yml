@@ -346,10 +346,13 @@ jobs:
             list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
             --no-paginate --output text)
             echo $OldWorkflowID > oldWorkflowId.txt
-            aws cloudformation update-stack \
-            --use-previous-template \
-            --stack-name udapeoplestack \
-            --parameters ParameterKey=WorkflowID,ParameterValue=${CIRCLE_WORKFLOW_ID:0:7}
+            aws cloudformation delete-stack --stack-name "udapeoplestack-${OldWorkflowID}"
+            sleep 60
+            aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --stack-name udapeoplestack-${CIRCLE_WORKFLOW_ID:0:7} \
+            --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}" \
+            --tags project=udapeople
       - run:
           name: install tar utilities
           command: |
