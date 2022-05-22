@@ -99,7 +99,7 @@ jobs:
       - run:
           name: Front-end test
           command: |
-             # Your code here
+            # Your code here
             cd frontend
             npm run test
                 
@@ -113,7 +113,7 @@ jobs:
       - run:
           name: Back-end test
           command: |
-             # Your code here
+            # Your code here
             cd backend
             npm run test
             
@@ -127,7 +127,7 @@ jobs:
       - run:
           name: Front-end scan
           command: |
-             # Your code here
+            # Your code here
             cd frontend
             npm i oauth-sign
             npm audit fix --audit-level=critical --force
@@ -142,7 +142,7 @@ jobs:
       - run:
           name: Back-end scan
           command: |
-             # Your code here
+            # Your code here
             cd backend
             npm i
             npm audit fix --audit-level=critical --force
