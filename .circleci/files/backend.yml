@@ -6,6 +6,12 @@ Parameters:
     Description: Unique identifier.
     Type: String
 
+  EnvironmentName:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+    Default: udapeople
+
+
 Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -35,3 +41,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub backend-${ID}
+
+  EIP1:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref EC2Instance
