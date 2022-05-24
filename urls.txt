@@ -1,2 +1,0 @@
-Public Url to GitHub repository (not private) [URL01]
-  https://github.com/mvpvn/udacity-project-3
