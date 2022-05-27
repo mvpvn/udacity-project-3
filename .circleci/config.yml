@@ -351,7 +351,7 @@ jobs:
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name udapeoplestack \
-            --parameters WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
+            --parameter-overrides WorkflowID=${CIRCLE_WORKFLOW_ID:0:7}
       - run:
           name: install tar utilities
           command: |
